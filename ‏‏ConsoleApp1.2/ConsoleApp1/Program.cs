@@ -1,130 +1,134 @@
-﻿using System;
-
 internal class Program
 {
-    static string[] fastFoodItems = { "Shawarma", "Pizza", "Burger" };
-    static string[] candyItems = { "Cake", "Cookies", "Cheesecake" };
-    static string[] coldDrinks = { "Orange juice", "Banana juice", "Apple juice", "Lemonade" };
-    static string[] hotDrinks = { "Coffee", "Tea" };
-
-    static int[] fastFoodOrders = new int[3];
-    static int[] candyOrders = new int[3];
-    static int[] coldDrinkOrders = new int[4];
-    static int[] hotDrinkOrders = new int[2];
-
-    static int total = 0;
-
     private static void Main(string[] args)
     {
-        int choice;
-        do
-        {
-            Console.WriteLine("Welcome to Ahmed Fast Food & Café.");
-            Console.WriteLine("Enter number (1-4) to show the menu or (0) to exit.");
-            Console.WriteLine("1. Fast Food\n2. Candies\n3. Cold Drinks\n4. Hot Drinks");
-            choice = int.Parse(Console.ReadLine());
+        string[] main_list = { "1. fast food.", "2. candies.","3. cold drinks." , "4. hot drinks." };
+        int Choice,  total = 0 , index =0;
+        string[] selector = {"Shawrma","Pizza","Burger","Cake","Cookies","Cheesecake","Lemonade","Apple juice","Banana juice","Orange juice" ,"Coffe","Tea" };
+        int[]selector_counter = new int[selector.Length];
+        int[] price = { 3,5,4,5,3,4,4,4,4,4,3,2 };
 
-            switch (choice)
+
+
+        string[] select_males = new string[3];
+                    int[] selector_counter_males = new int[3];
+                    int[] price_males = new int[3];
+                    cutter(selector, selector_counter, price, select_males, selector_counter_males, price_males,index);
+        string[] select_cakes = new string[3];
+                    int[] selector_counter_cakes = new int[3];
+                    int[] price_cakes = new int[3];
+                    cutter(selector, selector_counter, price, select_cakes, selector_counter_cakes, price_cakes, index+3);
+        string[] select_colddrinks = new string[4];
+                    int[] selector_counter_colddrinks = new int[4];
+                    int[] price_colddrinks = new int[4];
+                    cutter(selector,selector_counter,price,select_colddrinks,selector_counter_colddrinks,price_colddrinks,index+6);
+        string[] select_hotdrinks = new string[2];
+                    int[] selector_counter_hotdrinks = new int[2];
+                    int[] price_hotdrinks = new int[2];
+                    cutter(selector, selector_counter, price, select_hotdrinks, selector_counter_hotdrinks, price_hotdrinks,index+ 10);
+        for (int i = 1; i != 0; i = Choice)
+        {
+            Console.WriteLine("Welcome to Ahmed Fast Food & Café .");
+            Console.WriteLine("Enter number (1-4) to show the menu or (0) to esc .");
+            for (int j = 0; j < main_list.Length; j++)
+                Console.WriteLine(main_list[j]);
+
+            Choice = int.Parse(Console.ReadLine());
+            switch (Choice)
             {
                 case 1:
-                    HandleMenu(fastFoodItems, fastFoodOrders, 5, "meal");
+                    selected(select_males, selector_counter_males, price_males, main_list[0]);
                     break;
                 case 2:
-                    HandleMenu(candyItems, candyOrders, 5, "candy");
+                    selected(select_cakes, selector_counter_cakes, price_cakes, main_list[1]);
                     break;
                 case 3:
-                    HandleMenu(coldDrinks, coldDrinkOrders, 3, "drink");
+                    selected(select_colddrinks, selector_counter_colddrinks, price_colddrinks, main_list[2]);
                     break;
                 case 4:
-                    HandleMenu(hotDrinks, hotDrinkOrders, new int[] { 2, 1 }, "hot drink");
+                    selected(select_hotdrinks, selector_counter_hotdrinks, price_hotdrinks, main_list[3]);
                     break;
                 case 0:
                     break;
                 default:
-                    Console.WriteLine("Invalid input, please try again.");
+                    Console.WriteLine("Invallid Input");
                     break;
             }
-
-        } while (choice != 0);
-
-        DisplayInvoice();
-    }
-
-    static void HandleMenu(string[] items, int[] orders, int price, string type)
-    {
-        for (; ; )
-        {
-            Console.WriteLine($"Select a {type} (1-{items.Length}) or any other number to exit.");
-            for (int i = 0; i < items.Length; i++)
-                Console.WriteLine($"{i + 1}. {items[i]} ........{price}$");
-
-            int input = int.Parse(Console.ReadLine());
-            if (input < 1 || input > items.Length)
-                break;
-
-            Console.WriteLine($"Enter quantity of {items[input - 1]}:");
-            int qty = int.Parse(Console.ReadLine());
-            orders[input - 1] += qty;
-            total += qty * price;
         }
-    }
-
-    static void HandleMenu(string[] items, int[] orders, int[] prices, string type)
-    {
-        for (; ; )
-        {
-            Console.WriteLine($"Select a {type} (1-{items.Length}) or any other number to exit.");
-            for (int i = 0; i < items.Length; i++)
-                Console.WriteLine($"{i + 1}. {items[i]} ........{prices[i]}$");
-
-            int input = int.Parse(Console.ReadLine());
-            if (input < 1 || input > items.Length)
-                break;
-
-            Console.WriteLine($"Enter quantity of {items[input - 1]}:");
-            int qty = int.Parse(Console.ReadLine());
-            orders[input - 1] += qty;
-            total += qty * prices[input - 1];
-        }
-    }
-
-    static void DisplayInvoice()
-    {
-        Console.WriteLine("\n--- Invoice ---");
-
-        PrintOrderDetails(fastFoodItems, fastFoodOrders, 5);
-        PrintOrderDetails(candyItems, candyOrders, 5);
-        PrintOrderDetails(coldDrinks, coldDrinkOrders, 3);
-        PrintOrderDetails(hotDrinks, hotDrinkOrders, new int[] { 2, 1 });
-
-        Console.WriteLine($"\nTotal before discount: {total}$");
-
+        merger(selector_counter, selector_counter_males, selector_counter_cakes, selector_counter_colddrinks,selector_counter_hotdrinks);
+        testing(selector, selector_counter, price, ref total);
+        double discount = total;
         if (total >= 100)
         {
-            double discounted = total * 0.85;
-            Console.WriteLine("Congratulations! You received a 15% discount.");
-            Console.WriteLine($"Total after discount: {discounted}$");
+            Console.WriteLine("Congratulations! You have received a 15 % discount because your total account balance has exceeded $100.");
+            discount = discount - ((total * 15) / 100);
+            Console.WriteLine($"The total of your order is : [{total}$] and after discount is [{discount}$]");
+        }
+        else
+        {
+            Console.WriteLine($"The total of your order is :   [{total}$] .");
         }
     }
-
-    static void PrintOrderDetails(string[] items, int[] orders, int price)
+    public static void cutter(string[] selector , int[] selector_counter , int [] price , string[] selector1, int[] selector_counter1, int [] price1,int index )
     {
-        for (int i = 0; i < items.Length; i++)
+        for (int x = 0; x < selector1.Length; x++)
         {
-            if (orders[i] > 0)
+            selector1[x] = selector[x+index];
+            selector_counter1[x] = selector_counter[x+index];
+            price1[x] = price[x + index];
+        }
+    }
+    public static void merger(int []selector_counter, int[] selector_counter1, int[] selector_counter2, int[] selector_counter3, int[] selector_counter4)
+    {
+        for (int x = 0; x < selector_counter.Length; x++)
+        {
+            if (x<3)
+                selector_counter[x] = selector_counter1[x];
+            if (x >= 3 && x<6)
+                selector_counter[x] = selector_counter2[x-3];
+            if (x >= 6 && x < 10)
+                selector_counter[x] = selector_counter3[x - 6];
+            if (x >= 10 && x < 12)
+                selector_counter[x] = selector_counter4[x - 10];
+        }
+    }
+    public static void selected(string[] selector1, int[] selector_counter1, int[] price1, string name)
+    {
+        Console.WriteLine($"Now, You are in the \n{name} list " );
+        int choice = 1;
+        do
+        {
+            Console.WriteLine($"enter your choice (1-{selector1.Length}) or (0) to back");
+            for (int x = 0; x < selector1.Length; x++)
             {
-                Console.WriteLine($"You selected {orders[i]} x {items[i]} = {orders[i] * price}$");
+                Console.WriteLine($"{x + 1}. {selector1[x]}  \t  ({price1[x]}$)");
             }
-        }
+
+            choice = int.Parse(Console.ReadLine());
+            if (choice == 0)
+                return;
+            else
+            {
+                if (choice > selector1.Length || choice <0)
+                    Console.WriteLine($"{choice}: Invallid input try agarin");
+                else
+                {
+                    Console.WriteLine($"Enter The numbers of {selector1[choice-1]} .");
+                    selector_counter1[choice-1] = int.Parse(Console.ReadLine());
+                    Console.WriteLine("It was added to your order"); Console.WriteLine();
+                }
+            }
+        }while (choice !=0);
     }
 
-    static void PrintOrderDetails(string[] items, int[] orders, int[] prices)
+    public static void testing(string[] selector1 , int[] selector_counter , int[] price1, ref int total1)
     {
-        for (int i = 0; i < items.Length; i++)
+        for (int i = 0; i < selector_counter.Length; i++)
         {
-            if (orders[i] > 0)
+            if (selector_counter[i] >0)
             {
-                Console.WriteLine($"You selected {orders[i]} x {items[i]} = {orders[i] * prices[i]}$");
+                Console.WriteLine($"You have selected ({selector_counter[i]}) {selector1[i]} ({price1[i] * selector_counter[i]}$). ");
+                total1 += price1[i] * selector_counter[i];
             }
         }
     }
